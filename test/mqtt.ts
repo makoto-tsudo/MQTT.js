@@ -90,6 +90,15 @@ describe('mqtt', () => {
 			c.end((err) => done(err))
 		})
 
+		it('should return an MqttClient when connect is called with mqtt+unix:/ url', function _test(t, done) {
+			const c = mqtt.connect('mqtt+unix:///path/to/unix.socket')
+
+			c.should.be.instanceOf(mqtt.MqttClient)
+			c.options.should.have.property('protocol', 'mqtt')
+			c.options.should.have.property('path', '/path/to/unix.socket')
+			c.end((err) => done(err))
+		})
+
 		const sslOpts: IClientOptions = {
 			keyPath: path.join(__dirname, 'helpers', 'private-key.pem'),
 			certPath: path.join(__dirname, 'helpers', 'public-cert.pem'),

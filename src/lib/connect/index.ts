@@ -80,6 +80,21 @@ function connect(
 			parsed.port = Number(parsed.port)
 		}
 
+		const extraOpts: Record<string, string | number> = {}
+		if (parsed.protocol) {
+			const extraProto = parsed.protocol.split('+')
+			if (extraProto.length > 1) {
+				switch (extraProto[1]) {
+					case 'unix:':
+						extraOpts.protocol = extraProto[0]
+						extraOpts.port = null
+						extraOpts.host = null
+						extraOpts.path = parsed.path
+						break
+				}
+			}
+		}
+
 		opts = {
 			...{
 				port: parsed.port,
@@ -88,6 +103,7 @@ function connect(
 				query: parsed.query,
 				auth: parsed.auth,
 			},
+			...extraOpts,
 			...opts,
 		} as IClientOptions
 
